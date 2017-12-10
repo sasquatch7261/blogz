@@ -17,19 +17,45 @@ class Blog(db.Model):
         self.title = title
         self.body = body
 
-blogs = ["One", "Two", "Three"]
+@app.route('/newpost', methods=['POST', 'GET'])
+def new_post():
+    
+    title_error = ""
+    body_error = ""
 
-@app.route('/blog', methods=['POST', 'GET'])
-def blog():
+    if request.method == 'POST':
+        if len(request.form['title']) < 1 or len(request.form['body']) < 1:
+            if len(request.form['title']) < 1:
+                title_error = "Please fill in the title"
+            else:
+                title_error = ""
 
+            if len(request.form['body']) < 1:
+                body_error = "Please fill in the body"
+            else:
+                body_error = ""
+
+            return redirect("/newpost?title_error=" + title_error + "&body_error=" + body_error)
+
+        
     if request.method == 'POST':
         new_blog = Blog(title = request.form['title'], body = request.form['body'])
         db.session.add(new_blog)
         db.session.commit()
 
+        blogs = Blog.query.all()
+
+        return render_template("main-blog-page.html", blogs = blogs)
+
+    return render_template("new-post-page.html", title_error=title_error, body_error=body_error)
+
+
+@app.route('/blog')
+def blog():
+
     blogs = Blog.query.all()
 
-    return render_template("edit.html", blogs = blogs)
+    return render_template("main-blog-page.html", blogs = blogs)
 
 if __name__ == '__main__':
     app.run()
