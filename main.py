@@ -19,7 +19,7 @@ class Blog(db.Model):
 
 @app.route('/newpost', methods=['POST', 'GET'])
 def new_post():
-    
+
     title_error = ""
     body_error = ""
 
@@ -35,7 +35,7 @@ def new_post():
             else:
                 body_error = ""
 
-            return redirect("/newpost?title_error=" + title_error + "&body_error=" + body_error)
+            return render_template("new-post-page.html", title_error=title_error, body_error=body_error)
 
         
     if request.method == 'POST':
@@ -43,17 +43,28 @@ def new_post():
         db.session.add(new_blog)
         db.session.commit()
 
-        blogs = Blog.query.all()
+        #body = request.form['body', type=str]
+        #blog = Blog.query.get(body)
+        #return blog.body
+        #blogs = Blog.query.all()
 
-        return render_template("main-blog-page.html", blogs = blogs)
+        return redirect("/blog?id=" + str(new_blog.id))
+        #return render_template("main-blog-page.html", blogs = blogs)
+        
 
-    return render_template("new-post-page.html", title_error=title_error, body_error=body_error)
+    return render_template("new-post-page.html")
 
 
 @app.route('/blog')
 def blog():
-
+    
     blogs = Blog.query.all()
+    
+
+    if request.args.get("id", default=0, type=int) >= 1:
+        id = request.args.get("id", default=0, type=str)
+        blog = Blog.query.get(id)
+        return render_template("individual-post-page.html", blog=blog)
 
     return render_template("main-blog-page.html", blogs = blogs)
 

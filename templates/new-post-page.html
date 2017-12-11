@@ -7,12 +7,12 @@
             Title for your new blog:
             <br>
             <input type="text" name="title" />{% if title_error %}<p class="error">{{ title_error }}</p>{% endif %}
-        </label><br>
+        </label><br><br>
         <label>
             Your new blog:
             <br>
             <textarea name="body"></textarea>{% if body_error %}<p class="error">{{body_error}}</p>{% endif %}
-        </label><br>
+        </label><br><br>
             <input type="submit" value="Add Entry" />
     </form>
 {% endblock %}
