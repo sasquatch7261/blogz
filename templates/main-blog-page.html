@@ -3,7 +3,9 @@
 {% block content %}
     <h1>Build a Blog</h1>
     {% for blog in blogs %}
+    <div class="shift">
         <a href="/blog?id={{blog.id}}"><h2>{{blog.title}}</h2></a>
+    </div>
         <p>{{blog.body}}</p>
         <p>written by <a href="/blog?user={{ blog.owner_id }}">{{ blog.owner.username }}</a></p>
     {% endfor %}
